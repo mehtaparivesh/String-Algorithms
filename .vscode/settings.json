@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "*.jsx": "javascriptreact",
+        "*.js": "javascriptreact",
+        "barrier": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "latch": "cpp",
+        "limits": "cpp",
+        "semaphore": "cpp",
+        "valarray": "cpp",
+        "type_traits": "cpp"
+    }
+}
