@@ -175,17 +175,26 @@ int main(int argc, char const *argv[])
     cin >> s;
     string t = s + s;
     SuffixArray *sa = new SuffixArray(t);
-    string ans = "";
-    for (int i = 0; i < t.size(); i++)
+    ll ans = INT_MAX;
+    int i = 0;
+    while (i < sa->n)
     {
-        ll len = t.size() - sa->SA[i];
-        if (len >= s.size())
+        ll len = sa->SA[i];
+        if (len < s.size())
         {
-            ans = t.substr(sa->SA[i], s.size());
+            ans = sa->SA[i];
             break;
         }
+        i++;
+    }
+    i++;
+    while (i < sa->n and sa->lcp[i - 1] >= s.size())
+    {
+        ans = min(ans, sa->SA[i]);
+        i++;
     }
     cout << ans << endl;
+    cout << t.substr(ans, s.size()) << endl;
 
     return 0;
 }
