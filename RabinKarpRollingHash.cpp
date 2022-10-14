@@ -75,7 +75,7 @@ vi f(string s)
 {
     vi ans(s.size());
     ll prime = 31;
-    ll pow = 31 ;
+    ll pow = 31;
     ans[0] = s[0] - 'a' + 1;
     for (int i = 1; i < s.size(); i++)
     {

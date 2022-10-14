@@ -92,9 +92,9 @@ class tree
 {
 public:
     node *root;
-    
+
     void buildTree(node *root, vs &patterns)
-    { 
+    {
         loop(i, 0, patterns.size() - 1)
         {
             node *curr = root;
@@ -119,8 +119,8 @@ public:
         for (int i = 0; i < root->child.size(); i++)
         {
             if (root->child[i])
-                q.push(root->child[i]);
-            root->child[i]->suffixLink = root;
+                q.push(root->child[i]),
+                    root->child[i]->suffixLink = root;
         }
 
         while (q.size())
@@ -134,13 +134,26 @@ public:
 
                 node *ccChild = currState->child[i];
                 node *temp = ccChild->suffixLink;
+                while (!temp->child[i] and temp != root)
+                    temp = temp->suffixLink;
+
+                if (temp->child[i])
+                    ccChild->suffixLink = temp->child[i];
+                else
+                    ccChild->suffixLink = root;
+                q.push(ccChild);
             }
+
+            if (currState->suffixLink->patternIndex >= 0)
+                currState->outputLink = currState->suffixLink;
+            else
+                currState->outputLink = currState->suffixLink->outputLink;
         }
     }
 };
 int main(int argc, char const *argv[])
 {
     file_i_o();
-    
+
     return 0;
 }
