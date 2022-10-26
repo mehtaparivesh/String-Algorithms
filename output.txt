@@ -1,12 +1,4 @@
-n6
-query
 ACC ATC CAT GCG C T 
-root
-in Build 1
-built 1
-in build 2
-first 
-built 2
 0 -> 
 1 -> 2 
 2 -> 1 
