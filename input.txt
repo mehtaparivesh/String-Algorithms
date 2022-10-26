@@ -1,8 +1,8 @@
+abg1355hABCDE
 6
-GCATCG
-ACC
-ATC
-CAT
-GCG
-C
-T
+abAB
+ab
+ABC
+1
+35
+6
