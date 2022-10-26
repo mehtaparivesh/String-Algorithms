@@ -88,72 +88,133 @@ public:
     }
 };
 
-class tree
+void buildTree(node *root, vs &patterns)
 {
-public:
-    node *root;
-
-    void buildTree(node *root, vs &patterns)
+    cout << "in Build 1" << endl;
+    loop(i, 0, patterns.size() - 1)
     {
-        loop(i, 0, patterns.size() - 1)
+        node *curr = root;
+        loop(j, 0, patterns[i].size() - 1)
         {
-            node *curr = root;
-            loop(j, 0, patterns[i].size() - 1)
+            ll c = patterns[i][j] - 'A';
+            if (!curr->child[c])
             {
-                ll c = patterns[i][j] - 'a';
-                if (!curr->child[c])
-                {
-                    curr->child[c] = new node();
-                }
-
-                curr = curr->child[c];
+                curr->child[c] = new node();
             }
 
-            curr->patternIndex = i;
+            curr = curr->child[c];
+        }
+
+        curr->patternIndex = i;
+    }
+    cout << "built 1" << endl;
+}
+void build_Suffix_and_output_links(node *root)
+{
+    cout << "in build 2" << endl;
+    root->suffixLink = root;
+    queue<node *> q;
+    for (int i = 0; i < 26; i++)
+    {
+        if (root->child[i])
+        {
+            q.push(root->child[i]);
+            root->child[i]->suffixLink = root;
         }
     }
-    void build_Suffix_and_output_links(node *root)
+
+    cout << "first " << endl;
+    while (q.size())
     {
-        root->suffixLink = root;
-        queue<node *> q;
-        for (int i = 0; i < root->child.size(); i++)
+        node *currState = q.front();
+        q.pop();
+        loop(i, 0, 25)
         {
-            if (root->child[i])
-                q.push(root->child[i]),
-                    root->child[i]->suffixLink = root;
-        }
+            if (!currState->child[i])
+                continue;
 
-        while (q.size())
-        {
-            node *currState = q.front();
-            q.pop();
-            loop(i, 0, 25)
-            {
-                if (!currState->child[i])
-                    continue;
+            node *ccChild = currState->child[i];
+            node *temp = currState->suffixLink;
+            while (temp != root and !temp->child[i])
+                temp = temp->suffixLink;
 
-                node *ccChild = currState->child[i];
-                node *temp = ccChild->suffixLink;
-                while (!temp->child[i] and temp != root)
-                    temp = temp->suffixLink;
-
-                if (temp->child[i])
-                    ccChild->suffixLink = temp->child[i];
-                else
-                    ccChild->suffixLink = root;
-                q.push(ccChild);
-            }
-
-            if (currState->suffixLink->patternIndex >= 0)
-                currState->outputLink = currState->suffixLink;
+            if (temp->child[i])
+                ccChild->suffixLink = temp->child[i];
             else
-                currState->outputLink = currState->suffixLink->outputLink;
+                ccChild->suffixLink = root;
+
+            q.push(ccChild);
+        }
+
+        if (currState->suffixLink->patternIndex >= 0)
+            currState->outputLink = currState->suffixLink;
+        else
+            currState->outputLink = currState->suffixLink->outputLink;
+    }
+
+    cout << "built 2" << endl;
+}
+
+void search(node *root, string s, vector<vi> &res)
+{
+    node *parent = root;
+    loop(i, 0, s.size() - 1)
+    {
+        int c = s[i] - 'A';
+        if (parent->child[c])
+        {
+            parent = parent->child[c];
+            if (parent->patternIndex > -1)
+                res[parent->patternIndex].push_back(i);
+            node *myOutputLink = parent->outputLink;
+            while (myOutputLink)
+            {
+                res[myOutputLink->patternIndex].push_back(i);
+                myOutputLink = myOutputLink->outputLink;
+            }
+        }
+        else
+        {
+            while (parent != root and !parent->child[c])
+            {
+                parent = parent->suffixLink;
+            }
+
+            if (parent->child[c])
+                i--;
         }
     }
-};
+}
+
 int main(int argc, char const *argv[])
 {
     file_i_o();
+    ll n;
+    cin >> n;
+    cout << "n" << n << endl;
+    string q;
+    cin >> q;
+    cout << "query" << endl;
+    vector<string> patterns(n);
+    for (int i = 0; i < n; i++)
+        cin >> patterns[i];
+    for (auto it : patterns)
+        cout << it << " ";
+    cout << endl;
+    node *root = new node();
+    cout << "root" << endl;
+    buildTree(root, patterns);
+    build_Suffix_and_output_links(root);
+    vector<vi> ans(n);
+    search(root, q, ans);
+    loop(i, 0, n - 1)
+    {
+        cout << i << " -> ";
+        for (auto it : ans[i])
+            cout << it - patterns[i].size() + 1 << " ";
+            // cout << it  << " ";
+        cout << endl;
+    }
 
     return 0;
 }
