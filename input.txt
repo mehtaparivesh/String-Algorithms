@@ -1,2 +1,6 @@
-9
-icpcsguru
+4
+b
+aa
+hg
+c
+.
