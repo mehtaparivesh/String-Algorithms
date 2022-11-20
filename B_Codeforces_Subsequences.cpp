@@ -71,51 +71,38 @@ void file_i_o()
     freopen("output.txt", "w", stdout);
 #endif
 }
+unsigned ll prod(vi &v)
+{
 
+    unsigned ll ans = 1;
+    for (auto it : v)
+        ans *= it;
+    return ans;
+}
 int main(int argc, char const *argv[])
 {
     file_i_o();
-    ll n, k;
-    cin >> n >> k;
-    string s;
-    cin >> s;
-    vector<string> v = {"abc", "acb", "bac", "bca", "cab", "cba"};
-    vector<vi> dp(6, vi(s.size()));
+    ll n;
+    cin >> n;
 
-    for (int i = 0; i < 6; i++)
+    vector<char> s = {'c', 'o', 'd', 'e', 'f', 'o', 'r', 'c', 'e', 's'};
+    vi v(10, 1);
+    ll i = 0;
+    while (prod(v) < n)
     {
-
-        dp[i][0] = s[0] != v[i][0];
+        v[i % 10]++;
+        i++;
     }
-
-    for (int i = 0; i < 6; i++)
+    string ans = "";
+    for (int i = 0; i < 10; i++)
     {
-        for (int j = 1; j < s.size(); j++)
+
+        loop(j, 1, v[i])
         {
-            dp[i][j] = dp[i][j - 1] + (s[j] != v[i][j % 3]);
+            ans += s[i];
         }
     }
-    // for (auto it : dp)
-    // {
-    //     for (auto i : it)
-    //         cout << i << " ";
-    //     cout << endl;
-    // }
-    while (k--)
-    {
-        ll a, b;
-        cin >> a >> b;
-        a--;
-        b--;
 
-        ll ans = inf;
-        for (int i = 0; i < 6; i++)
-        {
-            ans = min(ans, dp[i][b] - (a > 0 ? dp[i][a - 1] : 0) * 1ll);
-        }
-        cout<<ans<<endl;
-    }
+    cout << ans << endl;
     return 0;
 }
-
-
